@@ -1,0 +1,1380 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Fundamentos de redes para Desarrollo de Aplicaciones Web">
+      
+      
+      
+      
+        <link rel="prev" href="../puertos/">
+      
+      
+        <link rel="next" href="../../tema4/sockets/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Ejercicios guiados - Networking para 1DAW</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ejercicios-guiados-puertos-de-red" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="Networking para 1DAW" class="md-header__button md-logo" aria-label="Networking para 1DAW" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking para 1DAW
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ejercicios guiados
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking para 1DAW" class="md-nav__button md-logo" aria-label="Networking para 1DAW" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Networking para 1DAW
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 1 - IP y máscaras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 1 - IP y máscaras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema1/ip-mascaras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema1/ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ejercicios guiados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema1/practica-ubuntu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica en Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 2 - Puertas de enlace
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 2 - Puertas de enlace
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema2/puertas-enlace/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema2/ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ejercicios guiados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema2/practica-ubuntu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica en Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 3 - Puertos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 3 - Puertos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../puertos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ejercicios guiados
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ejercicios guiados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-1-identificar-ip-puerto-y-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 1. Identificar IP, puerto y servicio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-2-reconocer-puertos-habituales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 2. Reconocer puertos habituales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-3-tcp-y-udp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 3. TCP y UDP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-4-puerto-de-origen-y-puerto-de-destino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 4. Puerto de origen y puerto de destino
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-5-esta-el-servicio-disponible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 5. ¿Está el servicio disponible?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-6-un-puerto-abierto-en-el-cortafuegos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 6. Un puerto abierto en el cortafuegos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-7-interpretar-una-salida-de-ss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 7. Interpretar una salida de ss
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-8-diagnostico-de-una-aplicacion-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 8. Diagnóstico de una aplicación web
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-9-disenar-una-configuracion-de-servicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 9. Diseñar una configuración de servicios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-10-actividad-de-sintesis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 10. Actividad de síntesis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entrega
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 4 - Sockets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 4 - Sockets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema4/sockets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-1-identificar-ip-puerto-y-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 1. Identificar IP, puerto y servicio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-2-reconocer-puertos-habituales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 2. Reconocer puertos habituales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-3-tcp-y-udp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 3. TCP y UDP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-4-puerto-de-origen-y-puerto-de-destino" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 4. Puerto de origen y puerto de destino
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-5-esta-el-servicio-disponible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 5. ¿Está el servicio disponible?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-6-un-puerto-abierto-en-el-cortafuegos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 6. Un puerto abierto en el cortafuegos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-7-interpretar-una-salida-de-ss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 7. Interpretar una salida de ss
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-8-diagnostico-de-una-aplicacion-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 8. Diagnóstico de una aplicación web
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-9-disenar-una-configuracion-de-servicios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 9. Diseñar una configuración de servicios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejercicio-10-actividad-de-sintesis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejercicio 10. Actividad de síntesis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entrega
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="ejercicios-guiados-puertos-de-red">Ejercicios guiados: puertos de red</h1>
+<p>Estos ejercicios permiten practicar la relación entre direcciones IP, puertos, protocolos de transporte y servicios de red.</p>
+<p>Intenta resolver cada ejercicio antes de abrir su solución.</p>
+<h2 id="ejercicio-1-identificar-ip-puerto-y-servicio">Ejercicio 1. Identificar IP, puerto y servicio</h2>
+<p>Un navegador intenta acceder a la siguiente dirección:</p>
+<div class="highlight"><pre><span></span><code>http://192.168.1.20:8080
+</code></pre></div>
+<p>Responde:</p>
+<ol>
+<li>¿Cuál es la dirección IP del servidor?</li>
+<li>¿Cuál es el puerto de destino?</li>
+<li>¿Qué protocolo de aplicación se está utilizando?</li>
+<li>¿Podemos asegurar que el servidor utiliza TCP?</li>
+<li>¿Qué ocurriría si la aplicación web estuviera escuchando en el puerto 80, pero no en el 8080?</li>
+</ol>
+<details>
+<summary>Ver solución</summary>
+
+1. La IP del servidor es `192.168.1.20`.
+2. El puerto de destino es `8080`.
+3. Se está utilizando HTTP, indicado por `http://`.
+4. Sí. HTTP tradicional sobre una URL `http://` utiliza TCP. HTTP/3, en cambio, utiliza QUIC sobre UDP y normalmente se identifica mediante una URL `https://`.
+5. La conexión al puerto 8080 no llegaría al servicio web del puerto 80. Si no existe un servicio escuchando en el puerto 8080, la conexión podría ser rechazada o no recibir respuesta, según la configuración de red.
+
+El puerto forma parte del destino de la comunicación y no se puede sustituir automáticamente por otro puerto.
+
+</details>
+
+<h2 id="ejercicio-2-reconocer-puertos-habituales">Ejercicio 2. Reconocer puertos habituales</h2>
+<p>Relaciona cada puerto con su servicio habitual.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Puerto</th>
+<th>Servicio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">22</td>
+<td>A. HTTPS</td>
+</tr>
+<tr>
+<td style="text-align: right;">53</td>
+<td>B. SSH</td>
+</tr>
+<tr>
+<td style="text-align: right;">80</td>
+<td>C. DNS</td>
+</tr>
+<tr>
+<td style="text-align: right;">443</td>
+<td>D. HTTP</td>
+</tr>
+<tr>
+<td style="text-align: right;">3306</td>
+<td>E. MySQL</td>
+</tr>
+</tbody>
+</table>
+<p>Escribe las correspondencias, por ejemplo: <code>22-B</code>.</p>
+<details>
+<summary>Ver solución</summary>
+
+- `22-B`: SSH.
+- `53-C`: DNS.
+- `80-D`: HTTP.
+- `443-A`: HTTPS.
+- `3306-E`: MySQL.
+
+Son puertos predeterminados habituales. Un administrador puede configurar un servicio para que utilice otro puerto.
+
+</details>
+
+<h2 id="ejercicio-3-tcp-y-udp">Ejercicio 3. TCP y UDP</h2>
+<p>Indica si cada afirmación es verdadera o falsa y justifica la respuesta.</p>
+<ol>
+<li>TCP y UDP comparten exactamente el mismo espacio de puertos.</li>
+<li>TCP proporciona entrega fiable y ordenada de datos.</li>
+<li>UDP garantiza que todos los datagramas lleguen a su destino.</li>
+<li>DNS puede utilizar tanto UDP como TCP.</li>
+<li>Una conexión TCP al puerto 443 garantiza por sí sola que los datos estén cifrados.</li>
+</ol>
+<details>
+<summary>Ver solución</summary>
+
+1. **Falsa.** TCP y UDP tienen espacios de puertos independientes. Puede existir TCP 53 y UDP 53.
+2. **Verdadera.** TCP ofrece entrega fiable y ordenada a la aplicación, mediante mecanismos como retransmisiones.
+3. **Falsa.** UDP no garantiza por sí mismo la entrega ni el orden.
+4. **Verdadera.** DNS utiliza habitualmente UDP y también TCP en determinadas operaciones y situaciones.
+5. **Falsa.** El puerto 443 se asocia normalmente a HTTPS, pero el cifrado depende del protocolo y de cómo se configure la comunicación, no del número de puerto por sí solo.
+
+</details>
+
+<h2 id="ejercicio-4-puerto-de-origen-y-puerto-de-destino">Ejercicio 4. Puerto de origen y puerto de destino</h2>
+<p>Un equipo cliente establece una conexión con un servidor web:</p>
+<div class="highlight"><pre><span></span><code>Cliente: 192.168.1.35:51824
+Servidor: 192.168.1.20:443
+Protocolo: TCP
+</code></pre></div>
+<p>Responde:</p>
+<ol>
+<li>¿Cuál es la IP del cliente?</li>
+<li>¿Cuál es el puerto de origen?</li>
+<li>¿Cuál es la IP del servidor?</li>
+<li>¿Cuál es el puerto de destino?</li>
+<li>¿Por qué el cliente no necesita utilizar el puerto 443 como puerto de origen?</li>
+</ol>
+<details>
+<summary>Ver solución</summary>
+
+1. `192.168.1.35`.
+2. `51824`.
+3. `192.168.1.20`.
+4. `443`.
+5. El cliente normalmente utiliza un puerto de origen temporal elegido por el sistema operativo. El puerto 443 es el puerto de destino habitual del servicio HTTPS.
+
+La combinación de protocolo, direcciones IP y puertos permite distinguir las comunicaciones.
+
+</details>
+
+<h2 id="ejercicio-5-esta-el-servicio-disponible">Ejercicio 5. ¿Está el servicio disponible?</h2>
+<p>Un administrador ejecuta una consulta de puertos en el servidor y observa:</p>
+<div class="highlight"><pre><span></span><code>LISTEN  0  128  127.0.0.1:8080  0.0.0.0:*
+</code></pre></div>
+<p>Responde:</p>
+<ol>
+<li>¿Qué significa <code>LISTEN</code> en este contexto?</li>
+<li>¿En qué puerto escucha la aplicación?</li>
+<li>¿Qué significa que la dirección local sea <code>127.0.0.1</code>?</li>
+<li>¿Podría acceder normalmente otro equipo de la LAN a través de <code>192.168.1.20:8080</code>?</li>
+<li>¿Qué tendría que comprobar el administrador si quiere que otros equipos accedan al servicio?</li>
+</ol>
+<details>
+<summary>Ver solución</summary>
+
+1. La aplicación tiene un socket TCP preparado para aceptar conexiones.
+2. Escucha en el puerto `8080`.
+3. `127.0.0.1` es la dirección de bucle local o *loopback*. La escucha está limitada al propio equipo.
+4. No, no a través de la dirección LAN si la aplicación solo escucha en `127.0.0.1`.
+5. Debe revisar la configuración de escucha de la aplicación, el cortafuegos y la conectividad de red. Si el servicio debe ser accesible desde la LAN, tendrá que escuchar en la dirección adecuada o en todas las interfaces pertinentes, aplicando las restricciones de seguridad necesarias.
+
+La salida es ilustrativa; la representación exacta puede variar según la herramienta.
+
+</details>
+
+<h2 id="ejercicio-6-un-puerto-abierto-en-el-cortafuegos">Ejercicio 6. Un puerto abierto en el cortafuegos</h2>
+<p>Un equipo tiene un cortafuegos que permite conexiones entrantes al puerto TCP 8080, pero no hay ninguna aplicación escuchando en ese puerto.</p>
+<p>Responde:</p>
+<ol>
+<li>¿Se ha iniciado un servidor web por permitir el puerto?</li>
+<li>¿Qué diferencia hay entre permitir el tráfico y tener un servicio en escucha?</li>
+<li>Si una aplicación comienza a escuchar después, ¿podrá cualquier equipo de Internet acceder a ella automáticamente?</li>
+</ol>
+<details>
+<summary>Ver solución</summary>
+
+1. No. La regla del cortafuegos no inicia ninguna aplicación.
+2. El cortafuegos decide qué tráfico permite; la aplicación es la que proporciona el servicio y escucha en el puerto.
+3. No necesariamente. También influyen las reglas de seguridad, las rutas, el direccionamiento, el NAT del router y las restricciones de la red.
+
+Solo se deben exponer los servicios necesarios y con una configuración segura.
+
+</details>
+
+<h2 id="ejercicio-7-interpretar-una-salida-de-ss">Ejercicio 7. Interpretar una salida de <code>ss</code></h2>
+<p>Un alumno ejecuta:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-lnt
+</code></pre></div>
+<p>Y obtiene una salida similar a esta:</p>
+<div class="highlight"><pre><span></span><code>State   Recv-Q Send-Q Local Address:Port  Peer Address:Port
+LISTEN  0      128    0.0.0.0:22         0.0.0.0:*
+LISTEN  0      128    127.0.0.1:631      0.0.0.0:*
+LISTEN  0      511    0.0.0.0:8080       0.0.0.0:*
+</code></pre></div>
+<p>Responde:</p>
+<ol>
+<li>¿Qué comando se ha ejecutado y qué muestran sus opciones?</li>
+<li>¿Qué servicio utiliza habitualmente el puerto 22?</li>
+<li>¿Qué diferencia hay entre la escucha en <code>127.0.0.1:631</code> y la de <code>0.0.0.0:8080</code>?</li>
+<li>¿Podemos afirmar que los servicios de los puertos 22 y 8080 son accesibles desde Internet?</li>
+<li>¿Por qué es útil consultar los puertos en escucha?</li>
+</ol>
+<details>
+<summary>Ver solución</summary>
+
+1. `ss -lnt`: muestra sockets TCP en escucha, con direcciones y puertos numéricos.
+2. SSH, utilizado habitualmente para administración remota.
+3. La primera escucha está limitada al bucle local; la segunda se asocia a todas las direcciones IPv4 locales compatibles con esa escucha.
+4. No. La salida no informa por sí sola del cortafuegos, NAT, rutas ni accesibilidad desde Internet.
+5. Permite identificar servicios que esperan conexiones y detectar exposiciones que deben revisarse.
+
+</details>
+
+<h2 id="ejercicio-8-diagnostico-de-una-aplicacion-web">Ejercicio 8. Diagnóstico de una aplicación web</h2>
+<p>Un alumno instala una aplicación web en un servidor Ubuntu. La aplicación indica que está funcionando y que escucha en el puerto 5000.</p>
+<p>Desde el propio servidor puede abrirla, pero desde otro equipo de la red no.</p>
+<p>Ordena las siguientes comprobaciones según te parezca más razonable y añade alguna más si lo consideras necesario:</p>
+<ul>
+<li>Comprobar el cortafuegos.</li>
+<li>Revisar la dirección local en la que escucha la aplicación.</li>
+<li>Comprobar la IP del servidor.</li>
+<li>Probar la conexión desde el cliente.</li>
+<li>Verificar que ambos equipos tienen conectividad de red.</li>
+</ul>
+<details>
+<summary>Ver solución orientativa</summary>
+
+Un orden razonable sería:
+
+1. Consultar la IP del servidor y verificar que el cliente utiliza la dirección correcta.
+2. Revisar con `ss -lnt` en qué dirección y puerto escucha la aplicación.
+3. Comprobar que ambos equipos tienen conectividad de red.
+4. Revisar las reglas del cortafuegos del servidor y las restricciones intermedias.
+5. Probar el acceso desde el cliente con la dirección y el puerto correctos.
+
+Si la aplicación escucha únicamente en `127.0.0.1:5000`, otros equipos no podrán acceder a ella mediante la IP LAN. También deben considerarse problemas de encaminamiento, aislamiento de clientes o configuración de la propia aplicación.
+
+</details>
+
+<h2 id="ejercicio-9-disenar-una-configuracion-de-servicios">Ejercicio 9. Diseñar una configuración de servicios</h2>
+<p>Una pequeña empresa dispone de un servidor Ubuntu con la IP <code>192.168.10.10</code>. Quiere ofrecer:</p>
+<ul>
+<li>Una web HTTPS.</li>
+<li>Administración remota mediante SSH.</li>
+<li>Una base de datos MySQL a la que solo debe acceder el servidor de aplicaciones de la IP <code>192.168.10.20</code>.</li>
+</ul>
+<p>Completa la tabla:</p>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th style="text-align: right;">Puerto habitual</th>
+<th>Protocolo de transporte</th>
+<th>¿Debe permitirse desde cualquier origen?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTPS</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>SSH</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>Ver solución orientativa</summary>
+
+| Servicio | Puerto habitual | Transporte | Acceso recomendado |
+|---|---:|---|---|
+| HTTPS | 443 | TCP para HTTPS tradicional; HTTP/3 usa QUIC sobre UDP | Permitir desde los clientes previstos |
+| SSH | 22 | TCP | Restringir a los equipos o redes de administración |
+| MySQL | 3306 | TCP | Permitir únicamente desde `192.168.10.20`, si esa es la única aplicación autorizada |
+
+La política exacta depende de la arquitectura. La base de datos no debería exponerse innecesariamente a toda la red o a Internet.
+
+</details>
+
+<h2 id="ejercicio-10-actividad-de-sintesis">Ejercicio 10. Actividad de síntesis</h2>
+<p>Un servidor Ubuntu tiene la IP <code>192.168.1.20/24</code> y ejecuta una aplicación web en el puerto TCP 8080.</p>
+<p>El administrador observa lo siguiente:</p>
+<ul>
+<li>Desde el propio servidor puede acceder a <code>http://127.0.0.1:8080</code>.</li>
+<li>Desde un equipo de la misma LAN no puede acceder a <code>http://192.168.1.20:8080</code>.</li>
+<li>El servicio aparece en escucha.</li>
+</ul>
+<p>Responde:</p>
+<ol>
+<li>¿Qué significa que funcione el acceso a <code>127.0.0.1</code>?</li>
+<li>¿Qué información adicional necesitas para determinar la causa del fallo?</li>
+<li>¿Qué comprobarías con <code>ss -lnt</code>?</li>
+<li>¿Qué papel puede desempeñar el cortafuegos?</li>
+<li>Explica por qué no basta con saber que el puerto 8080 está en escucha.</li>
+</ol>
+<details>
+<summary>Ver solución orientativa</summary>
+
+1. La aplicación responde a través de la interfaz de bucle local.
+2. Hay que conocer la dirección de escucha, las reglas del cortafuegos, la conectividad entre equipos y cualquier restricción de red.
+3. Si la aplicación escucha en `127.0.0.1:8080` o en `0.0.0.0:8080`, entre otros datos.
+4. El cortafuegos podría bloquear conexiones entrantes aunque la aplicación esté preparada para recibirlas.
+5. La escucha es solo una condición. La dirección de escucha, la conectividad y las políticas de seguridad también determinan si otro equipo puede acceder.
+
+</details>
+
+<h2 id="entrega">Entrega</h2>
+<p>Entrega las respuestas a los diez ejercicios. En los ejercicios de diagnóstico, justifica las decisiones en lugar de limitarte a escribir comandos.</p>
+<p>El objetivo no es memorizar números de puerto, sino comprender cómo se relacionan los servicios, las direcciones IP, los protocolos de transporte y las reglas de seguridad.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
