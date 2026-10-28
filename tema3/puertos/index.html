@@ -706,6 +706,321 @@
 
 
 <h1 id="puertos-tcp-y-udp">Puertos TCP y UDP</h1>
+<h1 id="tema-3-puertos-de-red">Tema 3. Puertos de red</h1>
+<h2 id="1-por-que-necesitamos-los-puertos">1. ¿Por qué necesitamos los puertos?</h2>
+<p>En una red, la dirección IP permite identificar una interfaz de red a la que queremos enviar tráfico. Sin embargo, un mismo ordenador puede ejecutar muchos programas que utilizan la red al mismo tiempo.</p>
+<p>Por ejemplo, un servidor puede ofrecer simultáneamente:</p>
+<ul>
+<li>Una página web mediante HTTP.</li>
+<li>Una página web segura mediante HTTPS.</li>
+<li>Acceso remoto mediante SSH.</li>
+<li>Un servicio de resolución de nombres DNS.</li>
+</ul>
+<p>¿Cómo sabe el sistema operativo qué programa debe recibir los datos que llegan al ordenador?</p>
+<p>Para distinguir los distintos servicios y aplicaciones se utilizan los <strong>puertos de transporte</strong>.</p>
+<p>Un puerto es un número que identifica un punto de comunicación asociado a un protocolo de transporte, como TCP o UDP.</p>
+<h3 id="ejemplo-un-servidor-web">Ejemplo: un servidor web</h3>
+<p>Imagina un servidor con la dirección IP <code>192.168.1.20</code> que ofrece una web y permite administrar el sistema remotamente.</p>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Protocolo</th>
+<th style="text-align: right;">Puerto habitual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web HTTP</td>
+<td>TCP</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr>
+<td>Web HTTPS</td>
+<td>TCP</td>
+<td style="text-align: right;">443</td>
+</tr>
+<tr>
+<td>Acceso remoto SSH</td>
+<td>TCP</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>UDP y TCP, según la operación</td>
+<td style="text-align: right;">53</td>
+</tr>
+</tbody>
+</table>
+<p>La dirección IP identifica el destino en la red IP; el puerto de destino ayuda a identificar el servicio al que se entregarán los datos.</p>
+<p>Los puertos no identifican por sí solos un programa de forma universal: el sistema operativo utiliza el protocolo, la dirección local, el puerto y el estado de la comunicación para gestionar el tráfico.</p>
+<h2 id="2-direccion-ip-y-puerto">2. Dirección IP y puerto</h2>
+<p>Una dirección IP y un puerto cumplen funciones diferentes.</p>
+<ul>
+<li><strong>Dirección IP:</strong> identifica una interfaz de red dentro del sistema de direccionamiento IP.</li>
+<li><strong>Puerto:</strong> identifica un punto de comunicación de la capa de transporte.</li>
+<li><strong>Protocolo de transporte:</strong> determina cómo se transportan los datos, por ejemplo, mediante TCP o UDP.</li>
+</ul>
+<p>Podemos representar un destino mediante una dirección IP y un puerto:</p>
+<div class="highlight"><pre><span></span><code>192.168.1.20:80
+</code></pre></div>
+<p>En este ejemplo:</p>
+<ul>
+<li><code>192.168.1.20</code> es la dirección IP.</li>
+<li><code>80</code> es el puerto de destino.</li>
+</ul>
+<p>Esta notación es habitual para direcciones IPv4. Con IPv6 se utilizan corchetes cuando se añade un puerto, por ejemplo:</p>
+<div class="highlight"><pre><span></span><code>[2001:db8::20]:443
+</code></pre></div>
+<h3 id="ejemplo-de-acceso-a-una-web">Ejemplo de acceso a una web</h3>
+<p>Si un navegador accede a:</p>
+<div class="highlight"><pre><span></span><code>http://192.168.1.20:80
+</code></pre></div>
+<p>está intentando acceder al servidor web de esa dirección IP mediante HTTP, utilizando el puerto TCP 80.</p>
+<p>En una URL HTTP es habitual omitir el puerto 80 porque es el puerto predeterminado del protocolo. De forma equivalente, HTTPS utiliza normalmente el puerto 443.</p>
+<p><strong>Importante:</strong> que un servidor utilice el puerto 80 no significa que cualquier aplicación web tenga que utilizarlo. Un servicio web también puede escuchar en puertos como 8080 o 8000.</p>
+<h2 id="3-que-diferencia-hay-entre-tcp-y-udp">3. ¿Qué diferencia hay entre TCP y UDP?</h2>
+<p>Los números de puerto se utilizan tanto con TCP como con UDP. Son espacios de puertos independientes: por ejemplo, TCP 53 y UDP 53 no son el mismo punto de comunicación.</p>
+<h3 id="tcp">TCP</h3>
+<p>TCP es un protocolo de transporte orientado a la conexión.</p>
+<p>Entre sus características principales están:</p>
+<ul>
+<li>Establece una conexión antes de intercambiar los datos de la aplicación.</li>
+<li>Proporciona entrega fiable y ordenada de los datos.</li>
+<li>Detecta pérdidas y retransmite los datos cuando corresponde.</li>
+<li>Utiliza mecanismos de control del flujo y de congestión.</li>
+</ul>
+<p>Se utiliza habitualmente en aplicaciones como HTTP, HTTPS y SSH.</p>
+<h3 id="udp">UDP</h3>
+<p>UDP es un protocolo de transporte sin conexión.</p>
+<p>Sus características principales son:</p>
+<ul>
+<li>No necesita establecer una conexión TCP antes de enviar datagramas.</li>
+<li>No garantiza por sí mismo que los datos lleguen.</li>
+<li>No garantiza por sí mismo el orden de llegada.</li>
+<li>Tiene una cabecera más sencilla y puede ser adecuado cuando interesa reducir la sobrecarga o gestionar la comunicación desde la propia aplicación.</li>
+</ul>
+<p>Se utiliza, entre otros casos, en consultas DNS, determinadas comunicaciones multimedia y algunos protocolos de tiempo real.</p>
+<p>UDP no es necesariamente más rápido en todas las situaciones, ni TCP es siempre la opción adecuada. La elección depende de los requisitos de la aplicación.</p>
+<h2 id="4-rangos-de-puertos">4. Rangos de puertos</h2>
+<p>Los números de puerto van de <code>0</code> a <code>65535</code>, ambos incluidos.</p>
+<p>Se suelen distinguir tres rangos:</p>
+<table>
+<thead>
+<tr>
+<th>Rango</th>
+<th>Denominación habitual</th>
+<th>Uso general</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–1023</td>
+<td>Puertos conocidos o <em>well-known</em></td>
+<td>Servicios ampliamente establecidos</td>
+</tr>
+<tr>
+<td>1024–49151</td>
+<td>Puertos registrados</td>
+<td>Aplicaciones y servicios registrados</td>
+</tr>
+<tr>
+<td>49152–65535</td>
+<td>Puertos dinámicos o privados</td>
+<td>Uso dinámico y efímero, entre otros</td>
+</tr>
+</tbody>
+</table>
+<p>Esta clasificación sigue la división habitual de IANA. El uso real depende del sistema operativo, la aplicación y la configuración.</p>
+<h3 id="puertos-de-servicio-y-puertos-efimeros">Puertos de servicio y puertos efímeros</h3>
+<p>Cuando un navegador establece una conexión con un servidor web, normalmente intervienen dos puertos:</p>
+<ul>
+<li>Un puerto de destino del servidor, por ejemplo, TCP 443.</li>
+<li>Un puerto de origen temporal del cliente, elegido normalmente por el sistema operativo.</li>
+</ul>
+<p>Ejemplo ilustrativo:</p>
+<div class="highlight"><pre><span></span><code>Cliente 192.168.1.35:51824
+              |
+              | TCP
+              v
+Servidor 192.168.1.20:443
+</code></pre></div>
+<p>En este ejemplo, <code>51824</code> es el puerto de origen del cliente y <code>443</code> es el puerto de destino del servidor.</p>
+<p>El puerto de origen no tiene por qué pertenecer siempre al rango dinámico: la selección depende del sistema operativo y de la configuración. El ejemplo representa un caso habitual.</p>
+<h2 id="5-puertos-habituales-que-debemos-conocer">5. Puertos habituales que debemos conocer</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Puerto</th>
+<th>Transporte habitual</th>
+<th>Servicio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">20 y 21</td>
+<td>TCP</td>
+<td>FTP: datos en modo activo y control, respectivamente</td>
+</tr>
+<tr>
+<td style="text-align: right;">22</td>
+<td>TCP</td>
+<td>SSH</td>
+</tr>
+<tr>
+<td style="text-align: right;">25</td>
+<td>TCP</td>
+<td>SMTP, envío de correo entre servidores</td>
+</tr>
+<tr>
+<td style="text-align: right;">53</td>
+<td>UDP y TCP</td>
+<td>DNS</td>
+</tr>
+<tr>
+<td style="text-align: right;">67 y 68</td>
+<td>UDP</td>
+<td>DHCP para servidor y cliente IPv4, respectivamente</td>
+</tr>
+<tr>
+<td style="text-align: right;">80</td>
+<td>TCP</td>
+<td>HTTP</td>
+</tr>
+<tr>
+<td style="text-align: right;">110</td>
+<td>TCP</td>
+<td>POP3</td>
+</tr>
+<tr>
+<td style="text-align: right;">123</td>
+<td>UDP</td>
+<td>NTP, sincronización horaria</td>
+</tr>
+<tr>
+<td style="text-align: right;">143</td>
+<td>TCP</td>
+<td>IMAP</td>
+</tr>
+<tr>
+<td style="text-align: right;">443</td>
+<td>TCP</td>
+<td>HTTPS tradicional</td>
+</tr>
+<tr>
+<td style="text-align: right;">587</td>
+<td>TCP</td>
+<td>Envío de correo mediante SMTP Submission</td>
+</tr>
+<tr>
+<td style="text-align: right;">993</td>
+<td>TCP</td>
+<td>IMAP sobre TLS</td>
+</tr>
+<tr>
+<td style="text-align: right;">995</td>
+<td>TCP</td>
+<td>POP3 sobre TLS</td>
+</tr>
+<tr>
+<td style="text-align: right;">3306</td>
+<td>TCP</td>
+<td>Puerto predeterminado de MySQL</td>
+</tr>
+<tr>
+<td style="text-align: right;">5432</td>
+<td>TCP</td>
+<td>Puerto predeterminado de PostgreSQL</td>
+</tr>
+<tr>
+<td style="text-align: right;">8080</td>
+<td>Depende del servicio</td>
+<td>Puerto alternativo frecuente para aplicaciones web</td>
+</tr>
+</tbody>
+</table>
+<p>La tabla muestra usos habituales, no reglas universales. Un administrador puede configurar un servicio para que utilice otro puerto.</p>
+<p>Además, algunos protocolos modernos pueden utilizar otros transportes. Por ejemplo, HTTP/3 utiliza QUIC sobre UDP, habitualmente en el puerto 443.</p>
+<h2 id="6-que-significa-que-un-puerto-este-en-escucha">6. ¿Qué significa que un puerto esté en escucha?</h2>
+<p>Un servidor necesita que una aplicación esté preparada para recibir comunicaciones. En TCP, normalmente se dice que un servicio está en estado de escucha cuando espera nuevas conexiones en una dirección y un puerto determinados.</p>
+<p>Por ejemplo, un servidor web podría escuchar en:</p>
+<div class="highlight"><pre><span></span><code>0.0.0.0:80
+</code></pre></div>
+<p>En IPv4, <code>0.0.0.0</code> suele indicar que la aplicación acepta conexiones dirigidas a cualquiera de las direcciones IPv4 locales compatibles con esa escucha.</p>
+<p>También podría escuchar en:</p>
+<div class="highlight"><pre><span></span><code>127.0.0.1:8080
+</code></pre></div>
+<p>En este caso, la escucha está limitada a la interfaz de bucle local. Normalmente solo podrán acceder a ella aplicaciones del propio equipo mediante esa dirección.</p>
+<p>En IPv6, <code>::</code> puede representar una escucha en todas las direcciones IPv6 locales, según la configuración del sistema y de la aplicación.</p>
+<h3 id="puerto-en-escucha-no-significa-puerto-accesible-desde-internet">Puerto en escucha no significa puerto accesible desde Internet</h3>
+<p>Para que un cliente remoto pueda acceder a un servicio, deben cumplirse varias condiciones:</p>
+<ol>
+<li>La aplicación debe estar ejecutándose y escuchando en la dirección y el puerto adecuados.</li>
+<li>La configuración de red debe permitir que el tráfico llegue al equipo.</li>
+<li>Los cortafuegos y las políticas de seguridad deben permitir la comunicación.</li>
+<li>Si hay un router con NAT, puede ser necesario configurar el encaminamiento o la traducción de puertos.</li>
+<li>El servicio debe estar preparado para atender ese tipo de petición.</li>
+</ol>
+<p>Por tanto, ver un puerto en escucha no demuestra que sea accesible desde otro equipo ni desde Internet.</p>
+<p>Del mismo modo, no recibir respuesta de una conexión no demuestra por sí solo que el puerto esté cerrado: pueden existir filtros, problemas de encaminamiento o restricciones intermedias.</p>
+<h2 id="7-puertos-y-cortafuegos">7. Puertos y cortafuegos</h2>
+<p>Un cortafuegos aplica reglas para permitir o bloquear tráfico de red.</p>
+<p>Las reglas pueden tener en cuenta, entre otros elementos:</p>
+<ul>
+<li>La dirección IP de origen.</li>
+<li>La dirección IP de destino.</li>
+<li>El protocolo de transporte.</li>
+<li>El puerto de origen o de destino.</li>
+<li>El estado de la comunicación.</li>
+<li>La interfaz de red.</li>
+</ul>
+<p>Por ejemplo, una política podría permitir conexiones TCP entrantes al puerto 443 para ofrecer una web HTTPS y bloquear conexiones entrantes al puerto 22 desde redes no autorizadas.</p>
+<p><strong>Abrir un puerto en el cortafuegos no inicia automáticamente un servicio.</strong> Si no hay ninguna aplicación escuchando en el puerto, permitir el tráfico no crea un servidor.</p>
+<p>Tampoco es recomendable abrir todos los puertos. Solo deben exponerse los servicios necesarios, con las medidas de seguridad apropiadas.</p>
+<h2 id="8-como-consultar-los-puertos-en-ubuntu">8. Cómo consultar los puertos en Ubuntu</h2>
+<p>En los siguientes apartados de este tema utilizaremos herramientas de terminal para observar los servicios y las conexiones.</p>
+<p>Una de las más útiles es:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-lnt
+</code></pre></div>
+<p>Las opciones indican:</p>
+<ul>
+<li><code>-l</code>: muestra sockets en escucha.</li>
+<li><code>-n</code>: muestra direcciones y puertos numéricos, sin resolver nombres.</li>
+<li><code>-t</code>: limita la consulta a TCP.</li>
+</ul>
+<p>Para consultar TCP y UDP:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-lntu
+</code></pre></div>
+<p>Para mostrar también información de las conexiones TCP y UDP, no solo las que están en escucha:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-tun
+</code></pre></div>
+<p>Para ver los procesos asociados cuando se dispone de los permisos necesarios:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>ss<span class="w"> </span>-lntup
+</code></pre></div>
+<p>No todos los servicios tienen que aparecer en estas consultas. El resultado depende de qué aplicaciones estén ejecutándose, de los protocolos utilizados y de los permisos del usuario.</p>
+<h2 id="9-ideas-fundamentales">9. Ideas fundamentales</h2>
+<ul>
+<li>La dirección IP identifica el destino en la capa IP; el puerto permite distinguir puntos de comunicación de la capa de transporte.</li>
+<li>TCP y UDP tienen espacios de puertos independientes.</li>
+<li>El puerto 443 se asocia habitualmente a HTTPS, pero el número de puerto no cifra los datos por sí mismo.</li>
+<li>Un puerto en escucha indica que existe un punto de comunicación preparado para recibir tráfico; no garantiza accesibilidad remota.</li>
+<li>Los cortafuegos pueden filtrar las comunicaciones incluso cuando existe un servicio en escucha.</li>
+<li>Un cliente suele utilizar un puerto de origen temporal para comunicarse con el puerto de destino de un servidor.</li>
+</ul>
+<h2 id="10-preguntas-de-repaso">10. Preguntas de repaso</h2>
+<ol>
+<li>¿Qué problema resuelven los puertos cuando un ordenador ejecuta varias aplicaciones de red?</li>
+<li>¿Qué diferencia hay entre una dirección IP y un puerto?</li>
+<li>¿Qué significa <code>192.168.1.20:443</code>?</li>
+<li>¿En qué se diferencian TCP y UDP?</li>
+<li>¿Qué servicio utiliza habitualmente el puerto TCP 22?</li>
+<li>¿Qué diferencia hay entre el puerto de origen y el puerto de destino?</li>
+<li>¿Puede existir una aplicación que escuche en el puerto 8080? ¿Qué tipo de servicio podría ofrecer?</li>
+<li>¿Qué significa que una aplicación escuche en <code>127.0.0.1:8080</code>?</li>
+<li>¿Por qué un puerto en escucha puede no ser accesible desde otro equipo?</li>
+<li>¿Qué diferencia hay entre iniciar un servicio y permitir su tráfico en el cortafuegos?</li>
+</ol>
+<p>En el siguiente apartado practicaremos la interpretación de puertos, protocolos, conexiones y servicios mediante ejercicios guiados.</p>
 
 
 
