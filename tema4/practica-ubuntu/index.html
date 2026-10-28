@@ -1,0 +1,1519 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Fundamentos de redes para Desarrollo de Aplicaciones Web">
+      
+      
+      
+      
+        <link rel="prev" href="../ejercicios/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Práctica en Ubuntu - Networking para 1DAW</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tema-4-practica-en-ubuntu-analisis-de-sockets" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="Networking para 1DAW" class="md-header__button md-logo" aria-label="Networking para 1DAW" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking para 1DAW
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Práctica en Ubuntu
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking para 1DAW" class="md-nav__button md-logo" aria-label="Networking para 1DAW" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Networking para 1DAW
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 1 - IP y máscaras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 1 - IP y máscaras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema1/ip-mascaras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema1/ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ejercicios guiados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema1/practica-ubuntu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica en Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 2 - Puertas de enlace
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 2 - Puertas de enlace
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema2/puertas-enlace/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema2/ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ejercicios guiados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema2/practica-ubuntu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica en Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 3 - Puertos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 3 - Puertos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema3/puertos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema3/ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ejercicios guiados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema3/practica-ubuntu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica en Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 4 - Sockets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 4 - Sockets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sockets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ejercicios guiados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica en Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica en Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-objetivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Objetivos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-material-necesario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Material necesario
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-actividad-1-consultar-los-sockets-tcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Actividad 1. Consultar los sockets TCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-actividad-2-consultar-los-sockets-udp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Actividad 2. Consultar los sockets UDP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-actividad-3-consultar-las-conexiones-tcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Actividad 3. Consultar las conexiones TCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-actividad-4-iniciar-un-servidor-web-temporal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Actividad 4. Iniciar un servidor web temporal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Actividad 4. Iniciar un servidor web temporal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comprobar-el-socket" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprobar el socket
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-actividad-5-acceder-al-servidor-con-curl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Actividad 5. Acceder al servidor con curl
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-actividad-6-observar-una-conexion-establecida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Actividad 6. Observar una conexión establecida
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-actividad-7-probar-una-conexion-a-un-puerto-sin-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Actividad 7. Probar una conexión a un puerto sin servicio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-actividad-8-cambiar-la-direccion-de-escucha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Actividad 8. Cambiar la dirección de escucha
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-actividad-9-probar-el-acceso-desde-otro-equipo-opcional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Actividad 9. Probar el acceso desde otro equipo (opcional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-finalizar-la-practica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Finalizar la práctica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Entrega
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusión
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-objetivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Objetivos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-material-necesario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Material necesario
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-actividad-1-consultar-los-sockets-tcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Actividad 1. Consultar los sockets TCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-actividad-2-consultar-los-sockets-udp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Actividad 2. Consultar los sockets UDP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-actividad-3-consultar-las-conexiones-tcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Actividad 3. Consultar las conexiones TCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-actividad-4-iniciar-un-servidor-web-temporal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Actividad 4. Iniciar un servidor web temporal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Actividad 4. Iniciar un servidor web temporal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comprobar-el-socket" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comprobar el socket
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-actividad-5-acceder-al-servidor-con-curl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Actividad 5. Acceder al servidor con curl
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-actividad-6-observar-una-conexion-establecida" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Actividad 6. Observar una conexión establecida
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-actividad-7-probar-una-conexion-a-un-puerto-sin-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Actividad 7. Probar una conexión a un puerto sin servicio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-actividad-8-cambiar-la-direccion-de-escucha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Actividad 8. Cambiar la dirección de escucha
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-actividad-9-probar-el-acceso-desde-otro-equipo-opcional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Actividad 9. Probar el acceso desde otro equipo (opcional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-finalizar-la-practica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Finalizar la práctica
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Entrega
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-rubrica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Rúbrica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusión
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="tema-4-practica-en-ubuntu-analisis-de-sockets">Tema 4. Práctica en Ubuntu: análisis de sockets</h1>
+<h2 id="1-objetivos">1. Objetivos</h2>
+<p>En esta práctica aprenderás a:</p>
+<ul>
+<li>Consultar los sockets TCP y UDP de un sistema Ubuntu.</li>
+<li>Identificar los puertos en los que escuchan los servicios.</li>
+<li>Diferenciar un socket de escucha de una conexión establecida.</li>
+<li>Iniciar un servidor web temporal y observar su socket.</li>
+<li>Comprobar el acceso a un servicio mediante <code>curl</code>.</li>
+<li>Entender cómo afecta la dirección de escucha a la accesibilidad de un servicio.</li>
+</ul>
+<h2 id="2-material-necesario">2. Material necesario</h2>
+<ul>
+<li>Un equipo con Ubuntu.</li>
+<li>Un usuario con permisos para ejecutar los comandos de la práctica.</li>
+<li>Un terminal.</li>
+<li>Python 3, que normalmente está instalado en Ubuntu.</li>
+</ul>
+<p>No es necesario instalar ni configurar un servidor web permanente.</p>
+<h2 id="3-actividad-1-consultar-los-sockets-tcp">3. Actividad 1. Consultar los sockets TCP</h2>
+<p>Abre una terminal y ejecuta:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-lnt
+</code></pre></div>
+<p>Este comando muestra sockets TCP en escucha.</p>
+<p>Las opciones son:</p>
+<ul>
+<li><code>-l</code>: sockets en escucha.</li>
+<li><code>-n</code>: direcciones y puertos numéricos.</li>
+<li><code>-t</code>: sockets TCP.</li>
+</ul>
+<p>Observa la salida y responde:</p>
+<ol>
+<li>¿Qué puertos aparecen?</li>
+<li>¿Qué direcciones locales aparecen?</li>
+<li>¿Aparece el puerto 22, normalmente asociado a SSH?</li>
+<li>¿Puedes afirmar que un servicio no existe si no aparece en la lista?</li>
+</ol>
+<p><strong>Importante:</strong> la salida depende de los servicios que estén ejecutándose en cada equipo. No todos los ordenadores mostrarán los mismos puertos.</p>
+<h2 id="4-actividad-2-consultar-los-sockets-udp">4. Actividad 2. Consultar los sockets UDP</h2>
+<p>Ejecuta:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-lnu
+</code></pre></div>
+<p>Responde:</p>
+<ol>
+<li>¿Qué diferencia hay entre este comando y <code>ss -lnt</code>?</li>
+<li>¿Aparecen puertos UDP?</li>
+<li>¿Por qué no todos los servicios utilizan TCP?</li>
+</ol>
+<p>UDP no establece una conexión equivalente a TCP. Por eso, sus sockets no se interpretan con los mismos estados de conexión.</p>
+<h2 id="5-actividad-3-consultar-las-conexiones-tcp">5. Actividad 3. Consultar las conexiones TCP</h2>
+<p>Ejecuta:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-ant
+</code></pre></div>
+<p>Este comando muestra sockets TCP, incluidos los que están escuchando y las conexiones que tienen otros estados.</p>
+<p>Identifica, si aparecen:</p>
+<ul>
+<li><code>LISTEN</code>: socket preparado para aceptar conexiones.</li>
+<li><code>ESTAB</code>: conexión TCP establecida.</li>
+<li>Otros estados, si existen.</li>
+</ul>
+<p>Responde:</p>
+<ol>
+<li>¿Aparece algún socket en estado <code>LISTEN</code>?</li>
+<li>¿Aparece alguna conexión <code>ESTAB</code>?</li>
+<li>¿Qué diferencia hay entre ambos estados?</li>
+<li>¿Por qué la salida puede cambiar mientras utilizas el equipo?</li>
+</ol>
+<p>Si no aparece ninguna conexión establecida, continúa con la siguiente actividad. No es necesario que el equipo tenga conexiones activas para completar la práctica.</p>
+<h2 id="6-actividad-4-iniciar-un-servidor-web-temporal">6. Actividad 4. Iniciar un servidor web temporal</h2>
+<p>Vamos a utilizar el servidor HTTP sencillo que incluye Python.</p>
+<p>En una terminal, ejecuta:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>http.server<span class="w"> </span><span class="m">8080</span><span class="w"> </span>--bind<span class="w"> </span><span class="m">127</span>.0.0.1
+</code></pre></div>
+<p>El servidor quedará ejecutándose en primer plano. No cierres esa terminal.</p>
+<p>El comando significa:</p>
+<ul>
+<li><code>python3</code>: ejecuta Python 3.</li>
+<li><code>-m http.server</code>: ejecuta el módulo que proporciona un servidor HTTP básico.</li>
+<li><code>8080</code>: puerto TCP utilizado por el servidor.</li>
+<li><code>--bind 127.0.0.1</code>: limita la escucha a la interfaz de loopback del propio equipo.</li>
+</ul>
+<p>Este servidor sirve archivos del directorio desde el que se ejecuta. Por eso, utiliza un directorio adecuado y no lo ejecutes desde una carpeta con documentos sensibles.</p>
+<h3 id="comprobar-el-socket">Comprobar el socket</h3>
+<p>Abre una segunda terminal y ejecuta:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-lnt
+</code></pre></div>
+<p>Localiza una línea correspondiente al puerto <code>8080</code>.</p>
+<p>También puedes filtrar el resultado:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-lnt<span class="w"> </span><span class="s1">'sport = :8080'</span>
+</code></pre></div>
+<p>Responde:</p>
+<ol>
+<li>¿Qué dirección local aparece?</li>
+<li>¿Qué puerto utiliza el servidor?</li>
+<li>¿Qué estado presenta el socket?</li>
+<li>¿Qué relación existe entre la salida de <code>ss</code> y el servidor Python que acabas de iniciar?</li>
+</ol>
+<h2 id="7-actividad-5-acceder-al-servidor-con-curl">7. Actividad 5. Acceder al servidor con curl</h2>
+<p>En la segunda terminal ejecuta:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://127.0.0.1:8080
+</code></pre></div>
+<p>Deberías recibir una respuesta HTTP con un listado de archivos del directorio servido.</p>
+<p>Ahora ejecuta:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-I<span class="w"> </span>http://127.0.0.1:8080
+</code></pre></div>
+<p>La opción <code>-I</code> solicita las cabeceras HTTP sin descargar el contenido normal de la página.</p>
+<p>Responde:</p>
+<ol>
+<li>¿Ha respondido el servidor?</li>
+<li>¿Qué código de estado HTTP aparece en las cabeceras?</li>
+<li>¿Qué diferencia hay entre ambos comandos <code>curl</code>?</li>
+<li>¿Qué dirección y puerto utiliza el cliente para llegar al servicio?</li>
+</ol>
+<h2 id="8-actividad-6-observar-una-conexion-establecida">8. Actividad 6. Observar una conexión establecida</h2>
+<p>Con el servidor Python todavía en ejecución, abre una terminal y ejecuta:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://127.0.0.1:8080
+</code></pre></div>
+<p>A continuación, consulta:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-ant
+</code></pre></div>
+<p>Es posible que la conexión <code>ESTAB</code> no aparezca: <code>curl</code> puede terminar la conexión antes de que ejecutes <code>ss</code>.</p>
+<p>Para mantener una petición activa durante más tiempo, puedes ejecutar:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://127.0.0.1:8080/archivo-inexistente
+</code></pre></div>
+<p>Observa la terminal del servidor y la respuesta de <code>curl</code>. Esta petición puede terminar rápidamente, así que no es obligatorio capturar una conexión establecida.</p>
+<p>Responde:</p>
+<ol>
+<li>¿Qué dirección y puerto corresponden al servidor?</li>
+<li>¿Qué dirección y puerto corresponden al cliente?</li>
+<li>¿Por qué el puerto del cliente puede ser diferente en cada petición?</li>
+<li>¿Por qué una conexión puede desaparecer de <code>ss -ant</code> poco después de una petición?</li>
+</ol>
+<h2 id="9-actividad-7-probar-una-conexion-a-un-puerto-sin-servicio">9. Actividad 7. Probar una conexión a un puerto sin servicio</h2>
+<p>Comprueba si existe un servicio en el puerto <code>8081</code>:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-lnt<span class="w"> </span><span class="s1">'sport = :8081'</span>
+</code></pre></div>
+<p>Si no aparece ningún resultado, no se observa un socket TCP en escucha que coincida con ese filtro.</p>
+<p>Prueba ahora:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>--max-time<span class="w"> </span><span class="m">3</span><span class="w"> </span>http://127.0.0.1:8081
+</code></pre></div>
+<p>Responde:</p>
+<ol>
+<li>¿Se ha completado la petición HTTP?</li>
+<li>¿Qué error muestra <code>curl</code>?</li>
+<li>¿Qué diferencia hay entre una conexión rechazada y una conexión que agota el tiempo de espera?</li>
+<li>¿Podemos concluir que todo el sistema de red está averiado? Justifica tu respuesta.</li>
+</ol>
+<p>El resultado exacto depende del estado del equipo. Un puerto sin servicio puede provocar un rechazo inmediato, pero un cortafuegos u otra circunstancia puede producir un tiempo de espera.</p>
+<h2 id="10-actividad-8-cambiar-la-direccion-de-escucha">10. Actividad 8. Cambiar la dirección de escucha</h2>
+<p>Detén el servidor Python de la primera terminal con:</p>
+<div class="highlight"><pre><span></span><code>Ctrl + C
+</code></pre></div>
+<p>Vuelve a iniciarlo, esta vez escuchando en todas las interfaces IPv4:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>http.server<span class="w"> </span><span class="m">8080</span><span class="w"> </span>--bind<span class="w"> </span><span class="m">0</span>.0.0.0
+</code></pre></div>
+<p>En la segunda terminal ejecuta:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-lnt<span class="w"> </span><span class="s1">'sport = :8080'</span>
+</code></pre></div>
+<p>Compara la dirección local con la obtenida en la actividad 4.</p>
+<p>Responde:</p>
+<ol>
+<li>¿Qué dirección aparece ahora?</li>
+<li>¿Qué significa <code>0.0.0.0</code> en este contexto?</li>
+<li>¿Qué diferencia hay entre escuchar en <code>127.0.0.1</code> y en <code>0.0.0.0</code>?</li>
+<li>¿Significa esto que cualquier equipo de Internet puede acceder al servidor?</li>
+</ol>
+<p><strong>Precaución:</strong> al escuchar en <code>0.0.0.0</code>, el servicio puede aceptar conexiones dirigidas a las interfaces IPv4 locales, siempre que la red y el cortafuegos lo permitan. Haz esta prueba solo en un entorno controlado y no publiques el servicio en Internet.</p>
+<h2 id="11-actividad-9-probar-el-acceso-desde-otro-equipo-opcional">11. Actividad 9. Probar el acceso desde otro equipo (opcional)</h2>
+<p>Realiza esta actividad únicamente si dispones de dos equipos conectados a la misma red y tienes autorización para probar la conectividad.</p>
+<p>En el equipo servidor, averigua su dirección IPv4 con:</p>
+<div class="highlight"><pre><span></span><code>ip<span class="w"> </span>-4<span class="w"> </span>addr
+</code></pre></div>
+<p>Busca la dirección de la interfaz de red correspondiente a la LAN. No utilices <code>127.0.0.1</code> para acceder desde el otro equipo.</p>
+<p>Desde el cliente, ejecuta, sustituyendo la IP por la dirección real del servidor:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>--max-time<span class="w"> </span><span class="m">5</span><span class="w"> </span>http://IP_DEL_SERVIDOR:8080
+</code></pre></div>
+<p>Responde:</p>
+<ol>
+<li>¿Has recibido una respuesta HTTP?</li>
+<li>Si no funciona, ¿qué comprobarías antes de concluir que el socket está mal configurado?</li>
+<li>¿Qué diferencias hay entre la dirección de escucha, la dirección de destino y el puerto de destino?</li>
+</ol>
+<p>Si la prueba falla, revisa la IP, la conectividad entre equipos, el cortafuegos y la dirección de escucha. No desactives el cortafuegos como primera medida de diagnóstico.</p>
+<h2 id="12-finalizar-la-practica">12. Finalizar la práctica</h2>
+<p>Detén el servidor Python con <code>Ctrl + C</code> en la terminal donde se está ejecutando.</p>
+<p>Comprueba que ya no aparece el puerto 8080:</p>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-lnt<span class="w"> </span><span class="s1">'sport = :8080'</span>
+</code></pre></div>
+<p>Si no hay otro servicio utilizando ese puerto, el filtro no debería mostrar resultados.</p>
+<h2 id="13-entrega">13. Entrega</h2>
+<p>Entrega un documento que incluya:</p>
+<ol>
+<li>Las salidas de <code>ss -lnt</code>, <code>ss -lnu</code> y <code>ss -ant</code>.</li>
+<li>Una captura de la escucha en <code>127.0.0.1:8080</code>.</li>
+<li>La respuesta obtenida con <code>curl</code>.</li>
+<li>Una comparación entre las direcciones <code>127.0.0.1</code> y <code>0.0.0.0</code>.</li>
+<li>Las respuestas a las preguntas de las actividades.</li>
+<li>Una conclusión breve que explique la relación entre sockets, puertos, aplicaciones y conexiones.</li>
+</ol>
+<h2 id="14-rubrica-de-evaluacion">14. Rúbrica de evaluación</h2>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Puntuación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Consulta e interpretación de sockets TCP y UDP</td>
+<td style="text-align: right;">2 puntos</td>
+</tr>
+<tr>
+<td>Identificación de estados y puertos</td>
+<td style="text-align: right;">2 puntos</td>
+</tr>
+<tr>
+<td>Inicio y comprobación del servidor HTTP</td>
+<td style="text-align: right;">2 puntos</td>
+</tr>
+<tr>
+<td>Comprensión de <code>127.0.0.1</code> y <code>0.0.0.0</code></td>
+<td style="text-align: right;">2 puntos</td>
+</tr>
+<tr>
+<td>Respuestas, evidencias y conclusión</td>
+<td style="text-align: right;">2 puntos</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align: right;"><strong>10 puntos</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="conclusion">Conclusión</h2>
+<p>Un socket permite a una aplicación utilizar los mecanismos de comunicación del sistema operativo. Con <code>ss</code> podemos inspeccionar sockets y conexiones; con <code>curl</code> podemos comprobar si un servicio HTTP responde. Sin embargo, que exista un socket en escucha no garantiza por sí solo que el servicio sea accesible desde otros equipos.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
