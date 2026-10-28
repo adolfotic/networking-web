@@ -1,0 +1,1428 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Fundamentos de redes para Desarrollo de Aplicaciones Web">
+      
+      
+      
+      
+        <link rel="prev" href="../ejercicios/">
+      
+      
+        <link rel="next" href="../../tema3/puertos/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Práctica en Ubuntu - Networking para 1DAW</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#practica-de-ubuntu-puertas-de-enlace-y-rutas" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../.." title="Networking para 1DAW" class="md-header__button md-logo" aria-label="Networking para 1DAW" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking para 1DAW
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Práctica en Ubuntu
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking para 1DAW" class="md-nav__button md-logo" aria-label="Networking para 1DAW" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Networking para 1DAW
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 1 - IP y máscaras
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 1 - IP y máscaras
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema1/ip-mascaras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema1/ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ejercicios guiados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema1/practica-ubuntu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica en Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 2 - Puertas de enlace
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 2 - Puertas de enlace
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../puertas-enlace/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ejercicios/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ejercicios guiados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica en Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Práctica en Ubuntu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-objetivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Objetivos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-material-necesario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Material necesario
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-consultar-la-configuracion-de-red" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Consultar la configuración de red
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Consultar la configuración de red">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preguntas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preguntas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-localizar-la-puerta-de-enlace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Localizar la puerta de enlace
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Localizar la puerta de enlace">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preguntas_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preguntas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-comprobar-la-conectividad-con-la-puerta-de-enlace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Comprobar la conectividad con la puerta de enlace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-consultar-la-ruta-hacia-un-destino-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Consultar la ruta hacia un destino local
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-observar-una-comunicacion-con-otro-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Observar una comunicación con otro equipo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-diagnostico-de-situaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Diagnóstico de situaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Diagnóstico de situaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#caso-a-funciona-la-red-local-pero-no-se-accede-a-internet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caso A. Funciona la red local, pero no se accede a Internet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caso-b-no-funciona-ni-la-comunicacion-local-ni-la-externa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caso B. No funciona ni la comunicación local ni la externa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caso-c-no-responde-el-ping-al-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caso C. No responde el ping al router
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caso-d-el-equipo-no-tiene-ruta-predeterminada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caso D. El equipo no tiene ruta predeterminada
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Entrega
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-criterios-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Criterios de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 3 - Puertos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 3 - Puertos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema3/puertos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tema 4 - Sockets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tema 4 - Sockets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tema4/sockets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conceptos básicos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-objetivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Objetivos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-material-necesario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Material necesario
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-consultar-la-configuracion-de-red" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Consultar la configuración de red
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Consultar la configuración de red">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preguntas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preguntas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-localizar-la-puerta-de-enlace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Localizar la puerta de enlace
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Localizar la puerta de enlace">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preguntas_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preguntas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-comprobar-la-conectividad-con-la-puerta-de-enlace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Comprobar la conectividad con la puerta de enlace
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-consultar-la-ruta-hacia-un-destino-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Consultar la ruta hacia un destino local
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-observar-una-comunicacion-con-otro-equipo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Observar una comunicación con otro equipo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-diagnostico-de-situaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Diagnóstico de situaciones
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Diagnóstico de situaciones">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#caso-a-funciona-la-red-local-pero-no-se-accede-a-internet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caso A. Funciona la red local, pero no se accede a Internet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caso-b-no-funciona-ni-la-comunicacion-local-ni-la-externa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caso B. No funciona ni la comunicación local ni la externa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caso-c-no-responde-el-ping-al-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caso C. No responde el ping al router
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caso-d-el-equipo-no-tiene-ruta-predeterminada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caso D. El equipo no tiene ruta predeterminada
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-entrega" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Entrega
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-criterios-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Criterios de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="practica-de-ubuntu-puertas-de-enlace-y-rutas">Práctica de Ubuntu: puertas de enlace y rutas</h1>
+<h2 id="1-objetivos">1. Objetivos</h2>
+<p>Al terminar esta práctica, deberás ser capaz de:</p>
+<ul>
+<li>Consultar la configuración IP de un equipo Ubuntu.</li>
+<li>Identificar su dirección IP, máscara o prefijo de red.</li>
+<li>Localizar la puerta de enlace predeterminada.</li>
+<li>Consultar la tabla de rutas del sistema.</li>
+<li>Diferenciar una comunicación dentro de la red local de otra que necesita un router.</li>
+<li>Interpretar el resultado de una consulta de ruta.</li>
+<li>Realizar un diagnóstico inicial cuando un equipo no tiene conectividad.</li>
+</ul>
+<h2 id="2-material-necesario">2. Material necesario</h2>
+<ul>
+<li>Un equipo con Ubuntu.</li>
+<li>Acceso a una terminal.</li>
+<li>Conexión a una red local, si está disponible.</li>
+</ul>
+<p><strong>Importante:</strong> en esta práctica solo consultaremos la configuración. No cambies la dirección IP, las rutas ni la configuración del router.</p>
+<h2 id="3-consultar-la-configuracion-de-red">3. Consultar la configuración de red</h2>
+<p>Abre una terminal y ejecuta:</p>
+<div class="highlight"><pre><span></span><code>ip<span class="w"> </span>addr
+</code></pre></div>
+<p>Este comando muestra las interfaces de red y sus direcciones.</p>
+<p>Busca la interfaz que estés utilizando. Puede llamarse <code>enp0s3</code>, <code>ens33</code>, <code>eno1</code>, <code>wlp2s0</code> u otro nombre.</p>
+<p>Anota los datos de tu interfaz:</p>
+<table>
+<thead>
+<tr>
+<th>Dato</th>
+<th>Tu resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre de la interfaz</td>
+<td></td>
+</tr>
+<tr>
+<td>Dirección IPv4</td>
+<td></td>
+</tr>
+<tr>
+<td>Prefijo de red</td>
+<td></td>
+</tr>
+<tr>
+<td>Estado de la interfaz</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Por ejemplo, podrías encontrar:</p>
+<div class="highlight"><pre><span></span><code>inet 192.168.1.35/24
+</code></pre></div>
+<p>Esto indica que la interfaz tiene la dirección <code>192.168.1.35</code> y utiliza un prefijo <code>/24</code>, equivalente a la máscara <code>255.255.255.0</code>.</p>
+<p>El nombre de la interfaz y la dirección IP de tu equipo pueden ser diferentes.</p>
+<h3 id="preguntas">Preguntas</h3>
+<ol>
+<li>¿Qué dirección IPv4 tiene tu equipo?</li>
+<li>¿Qué significa el número que aparece después de la barra?</li>
+<li>¿Qué máscara de red corresponde a un prefijo <code>/24</code>?</li>
+<li>¿Por qué puede haber varias interfaces de red en un mismo equipo?</li>
+</ol>
+<h2 id="4-localizar-la-puerta-de-enlace">4. Localizar la puerta de enlace</h2>
+<p>Ejecuta:</p>
+<div class="highlight"><pre><span></span><code>ip<span class="w"> </span>route
+</code></pre></div>
+<p>Este comando muestra las rutas que Ubuntu utiliza para decidir por dónde enviar los paquetes IP.</p>
+<p>Un resultado de ejemplo podría ser:</p>
+<div class="highlight"><pre><span></span><code>default via 192.168.1.1 dev enp0s3
+192.168.1.0/24 dev enp0s3 proto kernel scope link src 192.168.1.35
+</code></pre></div>
+<p>Interpreta cada línea:</p>
+<ul>
+<li><code>default</code>: ruta que se utiliza cuando no existe otra ruta más específica aplicable.</li>
+<li><code>via 192.168.1.1</code>: dirección IP del siguiente salto, en este caso la puerta de enlace.</li>
+<li><code>dev enp0s3</code>: interfaz por la que se envía el tráfico.</li>
+<li><code>192.168.1.0/24</code>: red directamente conectada.</li>
+<li><code>src 192.168.1.35</code>: dirección IP de origen que Ubuntu propone utilizar para esa ruta.</li>
+</ul>
+<p>Anota tus resultados:</p>
+<table>
+<thead>
+<tr>
+<th>Dato</th>
+<th>Tu resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>¿Aparece una ruta <code>default</code>?</td>
+<td></td>
+</tr>
+<tr>
+<td>IP de la puerta de enlace</td>
+<td></td>
+</tr>
+<tr>
+<td>Interfaz utilizada para la ruta predeterminada</td>
+<td></td>
+</tr>
+<tr>
+<td>Red local que aparece en la tabla</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="preguntas_1">Preguntas</h3>
+<ol>
+<li>¿Qué dirección IP tiene tu puerta de enlace predeterminada?</li>
+<li>¿Por qué suele pertenecer a la misma red local que tu equipo?</li>
+<li>¿Qué diferencia hay entre la dirección IP de tu equipo y la de la puerta de enlace?</li>
+<li>¿Qué podría ocurrir si no existiera una ruta predeterminada y quisieras acceder a una dirección de Internet?</li>
+</ol>
+<p>Si no aparece una ruta <code>default</code>, anótalo. Algunas redes o máquinas virtuales tienen configuraciones especiales; no supongas automáticamente que el equipo está mal configurado.</p>
+<h2 id="5-comprobar-la-conectividad-con-la-puerta-de-enlace">5. Comprobar la conectividad con la puerta de enlace</h2>
+<p>Si has identificado una puerta de enlace, sustituye <code>192.168.1.1</code> por su dirección y ejecuta:</p>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">192</span>.168.1.1
+</code></pre></div>
+<p>La opción <code>-c 4</code> hace que se envíen cuatro solicitudes y el comando termine.</p>
+<p>Observa el resultado:</p>
+<ul>
+<li>Si recibes respuestas, existe conectividad IP con la puerta de enlace para estas pruebas.</li>
+<li>Si no recibes respuestas, no puedes concluir por ese único dato que el router esté apagado. Puede bloquear ICMP, haber un problema de conexión o existir alguna restricción de red.</li>
+</ul>
+<p>Anota:</p>
+<ul>
+<li>¿Has recibido respuestas?</li>
+<li>¿Qué latencia aproximada muestran?</li>
+<li>¿Se ha perdido algún paquete?</li>
+</ul>
+<p><strong>Si estás trabajando en una máquina virtual</strong>, ten en cuenta que la topología de red configurada en el hipervisor puede influir en el resultado.</p>
+<h2 id="6-consultar-la-ruta-hacia-un-destino-local">6. Consultar la ruta hacia un destino local</h2>
+<p>Ejecuta:</p>
+<div class="highlight"><pre><span></span><code>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span><span class="m">192</span>.168.1.50
+</code></pre></div>
+<p>Este comando consulta qué ruta elegiría Ubuntu para llegar a esa dirección. No envía paquetes al destino.</p>
+<p>En este ejemplo se supone que tu equipo tiene la dirección <code>192.168.1.35/24</code> y que no hay rutas especiales que cambien la decisión.</p>
+<p>Interpreta el resultado. Si el destino pertenece a la red local, normalmente Ubuntu indicará la interfaz de salida y no necesitará enviar el paquete a la puerta de enlace.</p>
+<p>Ahora prueba con una dirección de otra red:</p>
+<div class="highlight"><pre><span></span><code>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span><span class="m">8</span>.8.8.8
+</code></pre></div>
+<p>Si existe una ruta predeterminada adecuada, el resultado normalmente indicará que el siguiente salto es la puerta de enlace.</p>
+<p>Responde:</p>
+<ol>
+<li>¿Qué interfaz aparece en cada consulta?</li>
+<li>¿Aparece <code>via</code> en ambas consultas o solo en una?</li>
+<li>¿Por qué Ubuntu puede necesitar la puerta de enlace para llegar a <code>8.8.8.8</code>, pero no para llegar a un equipo de su propia subred?</li>
+<li>¿Qué ocurriría si no existiera una ruta aplicable para uno de los destinos?</li>
+</ol>
+<p><strong>Importante:</strong> <code>ip route get</code> consulta la decisión local de encaminamiento. No demuestra que el destino esté encendido ni que sea alcanzable.</p>
+<h2 id="7-observar-una-comunicacion-con-otro-equipo">7. Observar una comunicación con otro equipo</h2>
+<p>Si tienes otro equipo accesible en la misma red local, consulta su dirección IP y ejecuta:</p>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>DIRECCION_IP_DEL_OTRO_EQUIPO
+</code></pre></div>
+<p>Sustituye <code>DIRECCION_IP_DEL_OTRO_EQUIPO</code> por la dirección real, por ejemplo:</p>
+<div class="highlight"><pre><span></span><code>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">192</span>.168.1.50
+</code></pre></div>
+<p>Si no dispones de otro equipo, puedes realizar igualmente el apartado anterior con <code>ip route get</code>.</p>
+<p>Contesta:</p>
+<ol>
+<li>¿Responde el otro equipo?</li>
+<li>¿Está en tu misma subred según la IP y el prefijo?</li>
+<li>Si no responde, ¿qué otras comprobaciones harías antes de concluir que existe un fallo de red?</li>
+</ol>
+<p>Recuerda que el cortafuegos del destino puede bloquear las solicitudes <code>ping</code>.</p>
+<h2 id="8-diagnostico-de-situaciones">8. Diagnóstico de situaciones</h2>
+<p>Lee cada caso e indica qué comprobarías y qué papel desempeña la puerta de enlace.</p>
+<h3 id="caso-a-funciona-la-red-local-pero-no-se-accede-a-internet">Caso A. Funciona la red local, pero no se accede a Internet</h3>
+<p>Un equipo puede comunicarse con otros ordenadores de su red, pero no puede acceder a direcciones externas.</p>
+<p>Indica al menos tres posibles comprobaciones. Por ejemplo:</p>
+<ul>
+<li>Revisar la ruta predeterminada con <code>ip route</code>.</li>
+<li>Comprobar la conectividad con la puerta de enlace.</li>
+<li>Comprobar si existe conectividad hacia una dirección externa.</li>
+<li>Si se alcanza una dirección IP externa, comprobar por separado la resolución DNS.</li>
+</ul>
+<p>No concluyas que el problema es necesariamente la puerta de enlace: también puede haber problemas de encaminamiento más allá del router, filtrado o falta de conectividad externa.</p>
+<h3 id="caso-b-no-funciona-ni-la-comunicacion-local-ni-la-externa">Caso B. No funciona ni la comunicación local ni la externa</h3>
+<p>¿Qué revisarías primero en <code>ip addr</code>? ¿Qué información adicional consultarías con <code>ip route</code>?</p>
+<h3 id="caso-c-no-responde-el-ping-al-router">Caso C. No responde el ping al router</h3>
+<p>Enumera al menos tres posibles causas y explica por qué el resultado no demuestra por sí solo que el router esté apagado.</p>
+<h3 id="caso-d-el-equipo-no-tiene-ruta-predeterminada">Caso D. El equipo no tiene ruta predeterminada</h3>
+<p>¿Qué tipo de destinos podría alcanzar todavía? ¿Qué información necesitas para determinar si la configuración es correcta para esa red?</p>
+<h2 id="9-entrega">9. Entrega</h2>
+<p>Entrega un documento breve con:</p>
+<ol>
+<li>La salida relevante de <code>ip addr</code> y los datos identificados.</li>
+<li>La salida de <code>ip route</code> y la identificación de la puerta de enlace.</li>
+<li>Los resultados de las dos consultas <code>ip route get</code>.</li>
+<li>El resultado de la prueba <code>ping</code> a la puerta de enlace, si dispones de ella.</li>
+<li>Las respuestas a las preguntas y los cuatro casos de diagnóstico.</li>
+<li>Una conclusión de entre cinco y ocho líneas explicando cómo decide Ubuntu si envía el tráfico directamente a otro equipo o a través de la puerta de enlace.</li>
+</ol>
+<p>Puedes ocultar direcciones públicas o cualquier dato de red que no sea necesario para la evaluación.</p>
+<h2 id="10-criterios-de-evaluacion">10. Criterios de evaluación</h2>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Puntuación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identifica la IP, el prefijo y la interfaz</td>
+<td style="text-align: right;">2 puntos</td>
+</tr>
+<tr>
+<td>Interpreta la ruta predeterminada y la puerta de enlace</td>
+<td style="text-align: right;">2 puntos</td>
+</tr>
+<tr>
+<td>Compara correctamente las consultas <code>ip route get</code></td>
+<td style="text-align: right;">2 puntos</td>
+</tr>
+<tr>
+<td>Realiza e interpreta las pruebas de conectividad con prudencia</td>
+<td style="text-align: right;">2 puntos</td>
+</tr>
+<tr>
+<td>Resuelve los casos de diagnóstico y redacta la conclusión</td>
+<td style="text-align: right;">2 puntos</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align: right;"><strong>10 puntos</strong></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
