@@ -650,6 +650,231 @@
 
 
 <h1 id="puertas-de-enlace">Puertas de enlace</h1>
+<h1 id="tema-2-puertas-de-enlace-y-comunicacion-entre-redes">Tema 2. Puertas de enlace y comunicación entre redes</h1>
+<h2 id="1-como-se-comunica-un-equipo-con-otro">1. ¿Cómo se comunica un equipo con otro?</h2>
+<p>Cuando un ordenador quiere enviar información a otro equipo, primero
+debe determinar si el destino está en su misma red IP o en una red
+diferente.</p>
+<p>Esta decisión es fundamental para comprender el funcionamiento
+de las redes.</p>
+<p>Imaginemos una red local con dos ordenadores:</p>
+<table>
+<thead>
+<tr>
+<th>Equipo</th>
+<th>Dirección IP</th>
+<th>Máscara</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ordenador A</td>
+<td><code>192.168.1.10</code></td>
+<td><code>255.255.255.0</code></td>
+</tr>
+<tr>
+<td>Ordenador B</td>
+<td><code>192.168.1.20</code></td>
+<td><code>255.255.255.0</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ambos pertenecen a la red <code>192.168.1.0/24</code>.</p>
+<p>Si el ordenador A quiere enviar información al ordenador B, puede
+hacerlo directamente a través de la red local, sin necesidad de
+que un router encamine el tráfico entre redes.</p>
+<p>Ahora imaginemos que el destino es <code>192.168.2.20</code>. Con la misma
+máscara <code>/24</code>, este equipo pertenece a otra red: <code>192.168.2.0/24</code>.</p>
+<p>En ese caso, el ordenador A necesita utilizar un router que pueda
+encaminar el tráfico hacia la red de destino.</p>
+<h2 id="2-el-papel-de-la-mascara-de-red">2. El papel de la máscara de red</h2>
+<p>La máscara o el prefijo permiten al equipo identificar qué parte
+de una dirección IP corresponde a la red.</p>
+<p>Por ejemplo, con el prefijo <code>/24</code>:</p>
+<ul>
+<li><code>192.168.1.10/24</code> pertenece a <code>192.168.1.0/24</code>.</li>
+<li><code>192.168.1.20/24</code> pertenece a <code>192.168.1.0/24</code>.</li>
+<li><code>192.168.2.20/24</code> pertenece a <code>192.168.2.0/24</code>.</li>
+</ul>
+<p>Por tanto, los dos primeros equipos están en la misma subred,
+mientras que el tercero está en una subred diferente.</p>
+<p><strong>Importante:</strong> no basta con comparar visualmente las direcciones IP.
+La decisión depende de la dirección IP y de su máscara o prefijo.</p>
+<h2 id="3-que-es-una-puerta-de-enlace">3. ¿Qué es una puerta de enlace?</h2>
+<p>Una puerta de enlace es un equipo o dispositivo que permite
+comunicar una red con otras redes.</p>
+<p>En una red IP, la puerta de enlace predeterminada suele ser
+la dirección de una interfaz de un router conectado a la red local.</p>
+<p>Por ejemplo:</p>
+<table>
+<thead>
+<tr>
+<th>Dispositivo</th>
+<th>Dirección IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ordenador A</td>
+<td><code>192.168.1.10/24</code></td>
+</tr>
+<tr>
+<td>Router, interfaz LAN</td>
+<td><code>192.168.1.1/24</code></td>
+</tr>
+<tr>
+<td>Ordenador B, otra red</td>
+<td><code>192.168.2.20/24</code></td>
+</tr>
+</tbody>
+</table>
+<p>El ordenador A puede utilizar <code>192.168.1.1</code> como puerta de enlace
+para enviar tráfico hacia destinos que no estén en su red local,
+siempre que exista una ruta adecuada.</p>
+<p>La puerta de enlace debe ser alcanzable desde la red local y la
+configuración de rutas debe permitir la comunicación.</p>
+<h2 id="4-router-y-puerta-de-enlace-son-lo-mismo">4. Router y puerta de enlace: ¿son lo mismo?</h2>
+<p>Aunque a menudo se utilizan como si fueran sinónimos, no significan
+exactamente lo mismo.</p>
+<p><strong>Router</strong></p>
+<p>Es un dispositivo o sistema que reenvía paquetes IP entre redes
+utilizando su tabla de rutas.</p>
+<p><strong>Puerta de enlace predeterminada</strong></p>
+<p>Es el siguiente salto que utiliza un equipo cuando necesita enviar
+tráfico a un destino para el que no dispone de una ruta más específica.</p>
+<p>En una red doméstica, la puerta de enlace suele ser el router.
+Sin embargo, un router puede tener varias interfaces y participar
+en muchas rutas distintas.</p>
+<h2 id="5-representacion-de-una-red-con-dos-subredes">5. Representación de una red con dos subredes</h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph RED1["Red 1: 192.168.1.0/24"]
+        A["Ordenador A&lt;br/&gt;192.168.1.10"]
+        G1["Interfaz del router&lt;br/&gt;192.168.1.1"]
+        A --- G1
+    end
+
+    R["Router&lt;br/&gt;Encamina paquetes IP"]
+
+    subgraph RED2["Red 2: 192.168.2.0/24"]
+        G2["Interfaz del router&lt;br/&gt;192.168.2.1"]
+        B["Ordenador B&lt;br/&gt;192.168.2.20"]
+        G2 --- B
+    end
+
+    G1 --- R
+    R --- G2</code></pre>
+<p>El router dispone de una interfaz en cada red. De este modo,
+puede recibir paquetes desde una subred y reenviarlos hacia la otra.</p>
+<p>Para que la comunicación funcione, las interfaces, las rutas y
+los equipos deben estar correctamente configurados.</p>
+<h2 id="6-que-ocurre-cuando-enviamos-un-paquete">6. ¿Qué ocurre cuando enviamos un paquete?</h2>
+<p>Supongamos que el ordenador A (<code>192.168.1.10/24</code>) quiere
+comunicarse con el ordenador B (<code>192.168.2.20/24</code>).</p>
+<p>El proceso simplificado es el siguiente:</p>
+<ol>
+<li>El ordenador A examina la dirección IP de destino.</li>
+<li>Utiliza su dirección IP y su prefijo para determinar que el
+   destino está en otra subred.</li>
+<li>Consulta su tabla de rutas para encontrar una ruta apropiada.</li>
+<li>Si la ruta seleccionada utiliza la puerta de enlace
+   <code>192.168.1.1</code>, el ordenador envía la trama al router.</li>
+<li>El router examina la dirección IP de destino y consulta su
+   propia tabla de rutas.</li>
+<li>Si dispone de una ruta válida, reenvía el paquete hacia la red
+   de destino.</li>
+<li>El ordenador B recibe el paquete si la comunicación está
+   permitida y la configuración es correcta.</li>
+</ol>
+<p>El paquete IP mantiene normalmente sus direcciones IP de origen
+y destino durante el encaminamiento. En cada enlace, la trama
+de nivel 2 se construye con las direcciones correspondientes
+al enlace local.</p>
+<p>En una red Ethernet, el ordenador A necesita conocer la dirección
+MAC del siguiente salto, que en este ejemplo es la interfaz LAN
+del router. Para resolver direcciones IPv4 a direcciones MAC
+se utiliza ARP.</p>
+<h2 id="7-que-sucede-si-el-destino-esta-en-la-misma-red">7. ¿Qué sucede si el destino está en la misma red?</h2>
+<p>Si el ordenador A quiere comunicarse con <code>192.168.1.20/24</code>,
+el destino pertenece a la misma subred.</p>
+<p>En ese caso, el ordenador A intenta enviar la trama directamente
+al equipo de destino. No necesita utilizar la puerta de enlace
+para encaminar el tráfico entre redes.</p>
+<p>Si todavía no conoce la dirección MAC del destino, puede utilizar
+ARP para averiguarla.</p>
+<pre class="mermaid"><code>flowchart TD
+    A["El equipo quiere enviar datos"]
+    B["¿El destino pertenece&lt;br/&gt;a la misma subred?"]
+    C["Enviar directamente&lt;br/&gt;al equipo de destino"]
+    D["Consultar una ruta&lt;br/&gt;hacia otra red"]
+    E["Enviar al siguiente salto,&lt;br/&gt;normalmente el router"]
+
+    A --&gt; B
+    B --&gt;|Sí| C
+    B --&gt;|No| D
+    D --&gt; E</code></pre>
+<p>Este esquema es una simplificación: la selección de ruta puede
+incluir rutas específicas, rutas estáticas y otras configuraciones.</p>
+<h2 id="8-que-es-una-tabla-de-rutas">8. ¿Qué es una tabla de rutas?</h2>
+<p>La tabla de rutas contiene información que el sistema utiliza
+para decidir por dónde enviar los paquetes IP.</p>
+<p>En Linux podemos consultarla con:</p>
+<div class="highlight"><pre><span></span><code>ip<span class="w"> </span>route
+</code></pre></div>
+<p>Ejemplo de salida:</p>
+<div class="highlight"><pre><span></span><code>default via 192.168.1.1 dev enp0s3
+192.168.1.0/24 dev enp0s3 proto kernel scope link src 192.168.1.10
+</code></pre></div>
+<p>La primera línea indica una ruta predeterminada:</p>
+<ul>
+<li><code>default</code>: se utiliza cuando no existe una ruta más específica
+  que resulte aplicable.</li>
+<li><code>via 192.168.1.1</code>: indica el siguiente salto.</li>
+<li><code>dev enp0s3</code>: indica la interfaz de salida.</li>
+</ul>
+<p>La segunda línea representa la red directamente conectada:</p>
+<ul>
+<li><code>192.168.1.0/24</code>: es el prefijo de destino.</li>
+<li><code>dev enp0s3</code>: es la interfaz asociada a esa red.</li>
+<li><code>src 192.168.1.10</code>: indica una dirección de origen preferida
+  para esa ruta.</li>
+</ul>
+<p>Los nombres de interfaz y las direcciones variarán según el equipo.</p>
+<h2 id="9-que-pasa-si-no-hay-una-ruta-adecuada">9. ¿Qué pasa si no hay una ruta adecuada?</h2>
+<p>Si el equipo no encuentra una ruta aplicable al destino, no podrá
+enviar el paquete por una ruta válida.</p>
+<p>Si falta la ruta predeterminada, todavía podría comunicarse con
+destinos que tengan rutas más específicas, como los de su red local.</p>
+<p>Además, configurar una puerta de enlace no garantiza por sí solo
+que la comunicación funcione. El router debe tener una ruta hacia
+el destino y deben permitirse los paquetes a lo largo del recorrido.</p>
+<h2 id="10-conceptos-clave">10. Conceptos clave</h2>
+<ul>
+<li><strong>Red local:</strong> conjunto de equipos que comparten una subred IP
+  y una conectividad local.</li>
+<li><strong>Router:</strong> dispositivo que encamina paquetes IP entre redes.</li>
+<li><strong>Puerta de enlace predeterminada:</strong> siguiente salto utilizado
+  normalmente para destinos sin una ruta más específica.</li>
+<li><strong>Tabla de rutas:</strong> información que permite decidir cómo enviar
+  los paquetes.</li>
+<li><strong>Ruta por defecto:</strong> ruta utilizada cuando no hay una ruta
+  más específica aplicable.</li>
+<li><strong>ARP:</strong> protocolo que permite resolver una dirección IPv4 a
+  una dirección MAC en una red local Ethernet.</li>
+</ul>
+<h2 id="11-preguntas-de-repaso">11. Preguntas de repaso</h2>
+<ol>
+<li>¿Qué información permite determinar si un destino está en la
+   misma subred?</li>
+<li>¿Qué diferencia hay entre un router y una puerta de enlace
+   predeterminada?</li>
+<li>¿Por qué un equipo utiliza una puerta de enlace para llegar
+   a otra red?</li>
+<li>¿Qué información muestra el comando <code>ip route</code>?</li>
+<li>¿Qué significa <code>default via 192.168.1.1</code>?</li>
+<li>¿Para qué sirve ARP?</li>
+<li>¿Tener configurada una puerta de enlace garantiza que se pueda
+   llegar a cualquier red? Justifica la respuesta.</li>
+</ol>
 
 
 
