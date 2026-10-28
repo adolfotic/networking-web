@@ -760,6 +760,217 @@
 
 
 <h1 id="sockets">Sockets</h1>
+<h1 id="tema-4-sockets">Tema 4. Sockets</h1>
+<h2 id="1-que-es-un-socket">1. ¿Qué es un socket?</h2>
+<p>Hasta ahora hemos estudiado las direcciones IP y los puertos. Sabemos que una dirección IP permite identificar un destino en la red y que un puerto permite distinguir distintos puntos de comunicación de una aplicación.</p>
+<p>Un <strong>socket</strong> es una abstracción del sistema operativo que permite a una aplicación comunicarse mediante una interfaz de programación de red.</p>
+<p>En una comunicación TCP, el socket permite a una aplicación utilizar una conexión de transporte. En UDP, permite enviar y recibir datagramas sin establecer una conexión TCP.</p>
+<p>Para entenderlo de forma intuitiva, podemos distinguir tres conceptos:</p>
+<ul>
+<li><strong>Dirección IP:</strong> identifica una interfaz de red de destino.</li>
+<li><strong>Puerto:</strong> identifica un punto de comunicación de la capa de transporte.</li>
+<li><strong>Socket:</strong> es el mecanismo que utiliza una aplicación para enviar y recibir datos a través de la red.</li>
+</ul>
+<p>La forma exacta de identificar un socket depende del protocolo y del contexto. No todos los sockets representan una conexión TCP establecida.</p>
+<h2 id="2-relacion-entre-ip-puerto-y-socket">2. Relación entre IP, puerto y socket</h2>
+<p>Imagina un servidor con la dirección IP <code>192.168.1.20</code> que ofrece una web mediante HTTPS.</p>
+<p>El servidor puede tener una aplicación escuchando en el puerto TCP 443:</p>
+<div class="highlight"><pre><span></span><code>Servidor: 192.168.1.20:443
+</code></pre></div>
+<p>Un cliente con la dirección IP <code>192.168.1.35</code> inicia una conexión desde un puerto de origen temporal, por ejemplo, el 51824:</p>
+<div class="highlight"><pre><span></span><code>Cliente:  192.168.1.35:51824
+Servidor: 192.168.1.20:443
+Protocolo: TCP
+</code></pre></div>
+<p>La comunicación utiliza dos extremos:</p>
+<ul>
+<li>El extremo local del cliente.</li>
+<li>El extremo remoto del servidor.</li>
+</ul>
+<p>En TCP, una conexión se identifica por la combinación de los dos extremos y el protocolo de transporte. Habitualmente se habla de una combinación de cinco elementos:</p>
+<ol>
+<li>Protocolo.</li>
+<li>IP de origen.</li>
+<li>Puerto de origen.</li>
+<li>IP de destino.</li>
+<li>Puerto de destino.</li>
+</ol>
+<p>Esta combinación suele denominarse <em>5-tupla</em>.</p>
+<h3 id="diagrama-de-una-comunicacion-tcp">Diagrama de una comunicación TCP</h3>
+<pre class="mermaid"><code>flowchart LR
+    A["Cliente&lt;br/&gt;192.168.1.35:51824"]
+    B["Servidor&lt;br/&gt;192.168.1.20:443"]
+    A &lt;--&gt;|"TCP"| B</code></pre>
+<p>El puerto 443 identifica el servicio HTTPS habitual en el servidor, mientras que el puerto 51824 es un ejemplo de puerto de origen del cliente.</p>
+<p>Un servidor puede atender simultáneamente a muchos clientes que se conectan a su mismo puerto de servicio. Las conexiones se distinguen mediante sus extremos y el protocolo.</p>
+<h2 id="3-socket-de-escucha-y-socket-de-conexion">3. Socket de escucha y socket de conexión</h2>
+<p>Es importante diferenciar un socket que espera conexiones de otro que forma parte de una conexión establecida.</p>
+<h3 id="socket-de-escucha">Socket de escucha</h3>
+<p>En un servidor TCP, la aplicación puede abrir un socket y asociarlo a una dirección y un puerto. Después, lo pone en estado de escucha para aceptar nuevas conexiones.</p>
+<p>Ejemplo:</p>
+<div class="highlight"><pre><span></span><code>0.0.0.0:443
+</code></pre></div>
+<p>En IPv4, esta dirección suele indicar que el socket escucha en todas las interfaces IPv4 locales compatibles con esa configuración.</p>
+<p>El socket de escucha no representa por sí mismo una conexión con un cliente concreto: está preparado para aceptar conexiones entrantes.</p>
+<h3 id="socket-de-conexion-establecida">Socket de conexión establecida</h3>
+<p>Cuando un cliente establece una conexión TCP, el sistema operativo mantiene información sobre esa conexión.</p>
+<p>Por ejemplo:</p>
+<div class="highlight"><pre><span></span><code>Cliente: 192.168.1.35:51824
+Servidor: 192.168.1.20:443
+Estado: ESTABLISHED
+</code></pre></div>
+<p>El estado <code>ESTABLISHED</code> indica que la conexión TCP está establecida.</p>
+<p>El servidor puede tener un socket de escucha en el puerto 443 y, al mismo tiempo, varios sockets asociados a conexiones establecidas con clientes diferentes.</p>
+<h2 id="4-por-que-un-servidor-puede-atender-a-varios-clientes">4. ¿Por qué un servidor puede atender a varios clientes?</h2>
+<p>Supongamos que tres clientes acceden al mismo servidor web:</p>
+<table>
+<thead>
+<tr>
+<th>Cliente</th>
+<th style="text-align: right;">Puerto de origen</th>
+<th>Servidor</th>
+<th style="text-align: right;">Puerto de destino</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cliente A</td>
+<td style="text-align: right;">51824</td>
+<td>192.168.1.20</td>
+<td style="text-align: right;">443</td>
+</tr>
+<tr>
+<td>Cliente B</td>
+<td style="text-align: right;">51825</td>
+<td>192.168.1.20</td>
+<td style="text-align: right;">443</td>
+</tr>
+<tr>
+<td>Cliente C</td>
+<td style="text-align: right;">51826</td>
+<td>192.168.1.20</td>
+<td style="text-align: right;">443</td>
+</tr>
+</tbody>
+</table>
+<p>Los tres clientes utilizan el mismo puerto de destino, TCP 443, pero cada conexión tiene un extremo de cliente diferente.</p>
+<p>El sistema operativo mantiene el estado necesario para distinguir las conexiones y entregar los datos a la aplicación correspondiente.</p>
+<p>Los puertos de origen del ejemplo son ilustrativos. El sistema operativo elige los puertos disponibles según sus reglas de asignación.</p>
+<p><strong>Idea clave:</strong> un puerto de servidor puede ser compartido por muchas conexiones TCP simultáneas. No es necesario que cada cliente utilice un puerto de servidor diferente.</p>
+<h2 id="5-sockets-tcp-y-udp">5. Sockets TCP y UDP</h2>
+<p>Los sockets pueden utilizar distintos protocolos de transporte.</p>
+<h3 id="sockets-tcp">Sockets TCP</h3>
+<p>TCP está orientado a la conexión. Ofrece entrega fiable y ordenada de los datos a la aplicación.</p>
+<p>En un servidor TCP podemos encontrar:</p>
+<ul>
+<li>Un socket de escucha.</li>
+<li>Sockets asociados a conexiones establecidas con clientes.</li>
+</ul>
+<p>Por ejemplo, un servidor web HTTPS tradicional puede utilizar TCP 443.</p>
+<h3 id="sockets-udp">Sockets UDP</h3>
+<p>UDP permite enviar y recibir datagramas sin establecer una conexión TCP.</p>
+<p>Una aplicación puede utilizar un socket UDP asociado a un puerto para recibir datagramas dirigidos a ese punto de comunicación.</p>
+<p>Por ejemplo, DNS utiliza habitualmente UDP 53 y también TCP 53 en determinadas operaciones.</p>
+<p>En UDP no existe el establecimiento de conexión TCP ni el estado <code>ESTABLISHED</code> de TCP. Algunas herramientas pueden mostrar información de sockets UDP de forma distinta a la de los sockets TCP.</p>
+<h2 id="6-direcciones-locales-y-remotas">6. Direcciones locales y remotas</h2>
+<p>Al consultar sockets, podemos encontrar columnas como estas:</p>
+<div class="highlight"><pre><span></span><code>Local Address:Port
+Peer Address:Port
+</code></pre></div>
+<p>La dirección local identifica el extremo asociado al socket en el equipo desde el que se realiza la consulta.</p>
+<p>La dirección remota o del extremo opuesto indica el otro extremo cuando existe uno definido para ese socket.</p>
+<p>Ejemplo ilustrativo:</p>
+<div class="highlight"><pre><span></span><code>Local Address:Port       Peer Address:Port
+192.168.1.35:51824       192.168.1.20:443
+</code></pre></div>
+<p>En este ejemplo:</p>
+<ul>
+<li>La dirección local es <code>192.168.1.35</code>.</li>
+<li>El puerto local es <code>51824</code>.</li>
+<li>La dirección remota es <code>192.168.1.20</code>.</li>
+<li>El puerto remoto es <code>443</code>.</li>
+</ul>
+<p>La interpretación de estas columnas depende del estado y del tipo de socket. Un socket de escucha no tiene necesariamente un cliente remoto concreto.</p>
+<h2 id="7-como-se-consultan-los-sockets-en-ubuntu">7. ¿Cómo se consultan los sockets en Ubuntu?</h2>
+<p>Ubuntu incluye la herramienta <code>ss</code>, que permite consultar sockets de red.</p>
+<h3 id="mostrar-sockets-tcp-en-escucha">Mostrar sockets TCP en escucha</h3>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-lnt
+</code></pre></div>
+<p>Opciones:</p>
+<ul>
+<li><code>-l</code>: sockets en escucha.</li>
+<li><code>-n</code>: direcciones y puertos numéricos.</li>
+<li><code>-t</code>: sockets TCP.</li>
+</ul>
+<h3 id="mostrar-sockets-tcp-y-udp">Mostrar sockets TCP y UDP</h3>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-tun
+</code></pre></div>
+<p>Este comando muestra sockets TCP y UDP, con direcciones y puertos numéricos. No se limita a los sockets en escucha.</p>
+<h3 id="mostrar-todas-las-conexiones-tcp">Mostrar todas las conexiones TCP</h3>
+<div class="highlight"><pre><span></span><code>ss<span class="w"> </span>-ant
+</code></pre></div>
+<p>Incluye sockets TCP en distintos estados, como escucha, conexiones establecidas y otros estados que existan en el sistema.</p>
+<h3 id="mostrar-procesos-asociados">Mostrar procesos asociados</h3>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>ss<span class="w"> </span>-tunap
+</code></pre></div>
+<p>La opción <code>-p</code> solicita información de los procesos asociados a los sockets. Para consultar procesos de otros usuarios pueden ser necesarios permisos elevados.</p>
+<p>La salida depende de los servicios que estén activos y de los permisos disponibles.</p>
+<h2 id="8-como-se-relaciona-un-socket-con-una-aplicacion">8. ¿Cómo se relaciona un socket con una aplicación?</h2>
+<p>Una aplicación utiliza las funciones de red que proporciona el sistema operativo para crear y gestionar sockets.</p>
+<p>En términos generales, un servidor TCP realiza operaciones equivalentes a estas:</p>
+<ol>
+<li>Crea un socket.</li>
+<li>Lo asocia a una dirección IP y un puerto, cuando corresponde.</li>
+<li>Lo pone en escucha.</li>
+<li>Acepta conexiones entrantes.</li>
+<li>Intercambia datos con los clientes.</li>
+<li>Cierra los sockets cuando termina la comunicación.</li>
+</ol>
+<p>Un cliente TCP realiza un proceso distinto:</p>
+<ol>
+<li>Crea un socket.</li>
+<li>Indica el destino al que quiere conectarse.</li>
+<li>Establece la conexión TCP.</li>
+<li>Intercambia datos.</li>
+<li>Cierra la conexión.</li>
+</ol>
+<p>No es necesario programar estas operaciones para utilizar una aplicación web: el navegador y el sistema operativo se encargan de los detalles.</p>
+<p>Sin embargo, comprender este proceso ayuda a diagnosticar problemas de red y a desarrollar aplicaciones cliente-servidor.</p>
+<h2 id="9-sockets-y-servidores-web">9. Sockets y servidores web</h2>
+<p>Cuando un navegador accede a una aplicación web, intervienen varios elementos:</p>
+<ol>
+<li>El navegador determina la dirección del servidor, resolviendo el nombre mediante DNS cuando sea necesario.</li>
+<li>El cliente selecciona un puerto de origen disponible.</li>
+<li>Se establece la comunicación de transporte adecuada.</li>
+<li>La petición llega al servicio web que corresponde.</li>
+<li>El servidor procesa la petición y devuelve una respuesta.</li>
+</ol>
+<p>En HTTPS tradicional, HTTP se transmite mediante TLS sobre TCP. HTTP/3 utiliza QUIC sobre UDP.</p>
+<p>Una comunicación web no depende únicamente de que exista un socket. También deben funcionar correctamente el direccionamiento IP, el encaminamiento, el transporte, la aplicación y las medidas de seguridad.</p>
+<h2 id="10-ideas-fundamentales">10. Ideas fundamentales</h2>
+<ul>
+<li>Un socket es una interfaz de comunicación que utiliza una aplicación a través del sistema operativo.</li>
+<li>IP, puerto y socket son conceptos relacionados, pero no equivalentes.</li>
+<li>Un socket de escucha TCP espera conexiones; una conexión TCP establecida representa una comunicación concreta.</li>
+<li>Un servidor puede mantener múltiples conexiones TCP en el mismo puerto de servicio.</li>
+<li>TCP y UDP utilizan espacios de puertos independientes.</li>
+<li>La herramienta <code>ss</code> permite observar sockets y sus estados.</li>
+<li>La existencia de un socket en escucha no garantiza que sea accesible desde otro equipo.</li>
+</ul>
+<h2 id="11-preguntas-de-repaso">11. Preguntas de repaso</h2>
+<ol>
+<li>¿Qué es un socket?</li>
+<li>¿Qué diferencia hay entre una dirección IP, un puerto y un socket?</li>
+<li>¿Qué es una <em>5-tupla</em>?</li>
+<li>¿Qué diferencia hay entre un socket de escucha y una conexión TCP establecida?</li>
+<li>¿Cómo puede un servidor atender a muchos clientes utilizando el mismo puerto de destino?</li>
+<li>¿Qué significa el estado <code>ESTABLISHED</code> en TCP?</li>
+<li>¿Qué diferencia hay entre un socket TCP y uno UDP?</li>
+<li>¿Para qué sirve <code>ss -lnt</code>?</li>
+<li>¿Qué información aportan las direcciones local y remota?</li>
+<li>¿Por qué una aplicación puede tener un socket en escucha y, aun así, no ser accesible desde otro equipo?</li>
+</ol>
+<p>En los siguientes apartados aplicaremos estos conceptos mediante ejercicios guiados y una práctica de terminal en Ubuntu.</p>
 
 
 
